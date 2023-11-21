@@ -38,12 +38,11 @@ public class NegozioService {
     }
 
     //MODIFICARE UN NEGOZIO
-    public Negozio update (Negozio negozio){
+    public void update (Negozio negozio){
         Negozio new_negozio = negozioRepo.findById(negozio.getId())
                 .orElseThrow(()->new NullPointerException("Nessun negozio trovato"));
         new_negozio.setCitta(negozio.getCitta());
         new_negozio.setIndirizzo(negozio.getIndirizzo());
         new_negozio.setpIva(negozio.getpIva());
-        return new_negozio;
     }
 }
