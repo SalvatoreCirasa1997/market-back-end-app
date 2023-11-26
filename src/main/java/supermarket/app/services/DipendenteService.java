@@ -1,8 +1,10 @@
 package supermarket.app.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import supermarket.app.dto.Dipendente_Request_DTO;
-import supermarket.app.dto.Dipendente_Response_DTO;
+import supermarket.app.converters.DipendenteDTOConverter;
+import supermarket.app.dto.DipendenteDTORequest;
+import supermarket.app.dto.DipendenteDTOResponse;
 import supermarket.app.models.Dipendente;
 import supermarket.app.models.Negozio;
 import supermarket.app.repositories.DipendenteRepo;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Service
 public class DipendenteService {
+    @Autowired
+    DipendenteDTOConverter dipendenteDTOConverter;
     private final DipendenteRepo dipendenteRepo;
     private final NegozioRepo negozioRepo;
 
@@ -22,22 +26,24 @@ public class DipendenteService {
     }
 
     //SELEZIONARE UN DIPENDENTE IN BASE ALL'ID
-    public Dipendente_Request_DTO getByID (Long id){
+    public DipendenteDTORequest getByID (Long id){
         Dipendente dipendente = dipendenteRepo.findById(id)
                 .orElseThrow(()-> new NullPointerException("ID fornito non valido"));
-        Dipendente_Request_DTO dipendenteRequestDTO = new Dipendente_Request_DTO(dipendente.getNome(),dipendente.getCognome(),dipendente.getMansione(),dipendente.getStipendio(),dipendente.getNegozio().getId());
+        DipendenteDTORequest dipendenteRequestDTO = dipendenteDTOConverter
+                .convertDipendenteToDipendenteDTORequest(dipendente);
         return dipendenteRequestDTO;
 
     }
 
 
     //RESTITUIRE TUTTI I DIPENDENTI IN BASE AL NOME
-    public List<Dipendente_Response_DTO> getByName (String name){
+    public List<DipendenteDTOResponse> getByName (String name){
 
             List<Dipendente> dipendentes = this.dipendenteRepo.findByNome(name);
-            List<Dipendente_Response_DTO> dipendenteResponseDTOS = new ArrayList<>();
+            List<DipendenteDTOResponse> dipendenteResponseDTOS = new ArrayList<>();
             for (Dipendente dipendente : dipendentes) {
-                Dipendente_Response_DTO dipendenteResponseDTO = new Dipendente_Response_DTO(dipendente.getId(),dipendente.getNome(), dipendente.getCognome(), dipendente.getMansione(), dipendente.getStipendio(), dipendente.getNegozio().getId());
+                DipendenteDTOResponse dipendenteResponseDTO = dipendenteDTOConverter
+                        .convertDipendenteToDipendenteDTOResponse(dipendente);
                 dipendenteResponseDTOS.add(dipendenteResponseDTO);
             }
             return dipendenteResponseDTOS;
@@ -45,56 +51,65 @@ public class DipendenteService {
     }
 
     //AGGIUNGERE UN DIPENDENTE NEL DATABASE
-    public Dipendente add (Dipendente_Request_DTO dipendente__dto){
+    public DipendenteDTOResponse add (DipendenteDTORequest dipendente__dto){
 
-        Negozio negozio = negozioRepo.findById(dipendente__dto.negozio_id())
+        Negozio negozio = negozioRepo.findById(dipendente__dto.getNegozio_id())
                 .orElseThrow(()->new NullPointerException("Id negozio non trovato"));
 
         Dipendente dipendente = new Dipendente();
-        dipendente.setNome(dipendente__dto.nome());
-        dipendente.setCognome(dipendente__dto.cognome());
-        dipendente.setMansione(dipendente__dto.mansione());
-        dipendente.setStipendio(dipendente__dto.stipendio());
+        dipendente.setNome(dipendente__dto.getNome());
+        dipendente.setCognome(dipendente__dto.getCognome());
+        dipendente.setMansione(dipendente__dto.getMansione());
+        dipendente.setStipendio(dipendente__dto.getStipendio());
         dipendente.setNegozio(negozio);
+        dipendenteRepo.save(dipendente);
 
-        return dipendenteRepo.save(dipendente);
+       DipendenteDTOResponse dipendenteResponseDto = new DipendenteDTOResponse(dipendente.getId(),
+                dipendente.getNome(),dipendente.getCognome(),dipendente.getMansione(),dipendente.getStipendio(),
+                dipendente.getNegozio().getId());
+
+       return dipendenteResponseDto;
     }
 
     //OTTENERE TUTTI I DIPENDENTI DI UN NEGOZIO
-    public List<Dipendente_Response_DTO> findAllByNegozioId (Long id) {
+    public List<DipendenteDTOResponse> findAllByNegozioId (Long id) {
         List<Dipendente> dipendentes = dipendenteRepo.findAllByNegozioId(id);
-        List<Dipendente_Response_DTO> dipendenteResponseDtos = new ArrayList<>();
+        List<DipendenteDTOResponse> dipendenteResponseDtos = new ArrayList<>();
 
         for(Dipendente dipendente : dipendentes){
-            Dipendente_Response_DTO dipendenteResponseDto = new Dipendente_Response_DTO(dipendente.getId(),dipendente.getNome(),dipendente.getCognome(),dipendente.getMansione(),dipendente.getStipendio(),dipendente.getNegozio().getId());
+            DipendenteDTOResponse dipendenteResponseDto = new DipendenteDTOResponse(dipendente.getId(),dipendente.getNome(),dipendente.getCognome(),dipendente.getMansione(),dipendente.getStipendio(),dipendente.getNegozio().getId());
             dipendenteResponseDtos.add(dipendenteResponseDto);
         }
         return dipendenteResponseDtos;
     }
 
-/*
+
     //MODIFICARE I DATI DI UN DIPENDENTE
-    public Dipendente update (Dipendente dipendente, Negozio negozio){
-        Dipendente new_Dipendente = dipendenteRepo.findByIdAndNegozio(dipendente.getId(), negozio)
+    public DipendenteDTOResponse update (DipendenteDTOResponse dipendente){
+        Dipendente new_Dipendente = dipendenteRepo.findById(dipendente.getId())
                 .orElseThrow(() -> new NullPointerException("Dipendente non trovato"));
 
-        new_Dipendente.setCognome(dipendente.getCognome());
-        new_Dipendente.setMansione(dipendente.getMansione());
+        Negozio negozio = negozioRepo.findById(dipendente.getNegozio_id())
+                .orElseThrow(()->new NullPointerException("Id negozio non trovato"));
+
+        new_Dipendente.setNegozio(negozio);
         new_Dipendente.setNome(dipendente.getNome());
         new_Dipendente.setStipendio(dipendente.getStipendio());
-        new_Dipendente.setNegozio(negozio);
+        new_Dipendente.setCognome(dipendente.getCognome());
+        new_Dipendente.setMansione(dipendente.getMansione());
+        dipendenteRepo.save(new_Dipendente);
 
-        return new_Dipendente;
+        return dipendente;
     }
 
     //CANCELLARE DIPENDENTE TRAMITE ID
-    public void remove (Long id, Negozio negozio){
-        Dipendente new_Dipendente = dipendenteRepo.findByIdAndNegozio(id, negozio)
+    public void remove (Long id){
+        Dipendente new_Dipendente = dipendenteRepo.findById(id)
                 .orElseThrow(() -> new NullPointerException("Dipendente non trovato"));
         dipendenteRepo.deleteById(new_Dipendente.getId());
     }
 
- */
+
 
 
 }

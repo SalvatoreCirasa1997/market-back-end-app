@@ -1,10 +1,8 @@
 package supermarket.app.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
-import supermarket.app.enums.Mansione;
+import supermarket.app.enums.MansioneEnum;
 
 @Entity
 @Table(name = "dipendenti")
@@ -23,7 +21,7 @@ public class Dipendente {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Mansione mansione;
+    private MansioneEnum mansioneEnum;
 
     @Column
     private double stipendio;
@@ -35,20 +33,24 @@ public class Dipendente {
     public Dipendente() {
     }
 
-    public Dipendente(Long id, String nome, String cognome, Mansione mansione, double stipendio, Negozio negozio) {
+    public Dipendente(Long id, String nome, String cognome, MansioneEnum mansioneEnum, double stipendio, Negozio negozio) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
-        this.mansione = mansione;
+        this.mansioneEnum = mansioneEnum;
         this.stipendio = stipendio;
         this.negozio = negozio;
     }
 
-    public Dipendente(String nome, String cognome, Mansione mansione, double stipendio) {
+    public Dipendente(String nome, String cognome, MansioneEnum mansioneEnum, double stipendio) {
         this.nome = nome;
         this.cognome = cognome;
-        this.mansione = mansione;
+        this.mansioneEnum = mansioneEnum;
         this.stipendio = stipendio;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -71,12 +73,12 @@ public class Dipendente {
         this.cognome = cognome;
     }
 
-    public Mansione getMansione() {
-        return mansione;
+    public MansioneEnum getMansione() {
+        return mansioneEnum;
     }
 
-    public void setMansione(Mansione mansione) {
-        this.mansione = mansione;
+    public void setMansione(MansioneEnum mansioneEnum) {
+        this.mansioneEnum = mansioneEnum;
     }
 
     public double getStipendio() {

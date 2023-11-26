@@ -1,10 +1,9 @@
 package supermarket.app.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import supermarket.app.enums.TipoFornitura;
+import supermarket.app.enums.TipologiaFornituraEnum;
 
 @Entity
 @Table(name = "Rifornitore")
@@ -20,13 +19,13 @@ public class Rifornitore {
     private String partitaIva;
 
     @Enumerated(EnumType.STRING)
-    private TipoFornitura tipoFornitura;
+    private TipologiaFornituraEnum tipologiaFornituraEnum;
 
-    public Rifornitore(long id, String nome, String partitaIva, TipoFornitura tipoFornitura) {
+    public Rifornitore(long id, String nome, String partitaIva, TipologiaFornituraEnum tipologiaFornituraEnum) {
         this.id = id;
         this.nome = nome;
         this.partitaIva = partitaIva;
-        this.tipoFornitura = tipoFornitura;
+        this.tipologiaFornituraEnum = tipologiaFornituraEnum;
     }
 
 
@@ -57,12 +56,12 @@ public class Rifornitore {
         this.partitaIva = partitaIva;
     }
 
-    public TipoFornitura getTipoFornitura() {
-        return tipoFornitura;
+    public TipologiaFornituraEnum getTipoFornitura() {
+        return tipologiaFornituraEnum;
     }
 
-    public void setTipoFornitura(TipoFornitura tipoFornitura) {
-        this.tipoFornitura = tipoFornitura;
+    public void setTipoFornitura(TipologiaFornituraEnum tipologiaFornituraEnum) {
+        this.tipologiaFornituraEnum = tipologiaFornituraEnum;
     }
 
 

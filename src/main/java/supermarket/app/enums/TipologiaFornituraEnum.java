@@ -1,5 +1,5 @@
 package supermarket.app.enums;
 
-public enum TipoFornitura {
+public enum TipologiaFornituraEnum {
     CASALINGHI, MACELLERIA, SALUMERIA
 }

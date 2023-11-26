@@ -1,5 +1,5 @@
 package supermarket.app.enums;
 
-public enum Mansione {
+public enum MansioneEnum {
     COMMESSO, SALUMIERE, MACELLAIO, SCAFFALISTA, MAGAZZINIERE;
 }
