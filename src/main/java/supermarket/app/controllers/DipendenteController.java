@@ -1,16 +1,15 @@
 package supermarket.app.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import supermarket.app.dto.Dipendente_Request_DTO;
+import supermarket.app.dto.Dipendente_Response_DTO;
 import supermarket.app.models.Dipendente;
-import supermarket.app.models.Negozio;
 import supermarket.app.services.DipendenteService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/dipendente")
@@ -22,37 +21,34 @@ public class DipendenteController {
     }
 
     @GetMapping("/getbyid")
-    public ResponseEntity<Dipendente> getById (@RequestParam Long id, @RequestBody Negozio negozio){
-       Optional<Dipendente> dipendente = this.dipendenteService.getByID(id,negozio);
-        // O un'altra risposta HTTP appropriata
-        return dipendente
-                .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Dipendente_Request_DTO> getById (@RequestParam Long id){
+       Dipendente_Request_DTO dipendenteRequestDTO = this.dipendenteService.getByID(id);
+       return new ResponseEntity<>(dipendenteRequestDTO,HttpStatus.OK);
     }
 
     @GetMapping("/getallbyname")
-    public ResponseEntity<List<Dipendente>> getAllByName (@RequestParam String name, @RequestBody Negozio negozio){
-        List<Dipendente> dipendentes = this.dipendenteService.getByName(name,negozio);
+    public ResponseEntity<List<Dipendente_Response_DTO>> getAllByName (@RequestParam String name){
+        List<Dipendente_Response_DTO> dipendentes = this.dipendenteService.getByName(name);
         return new ResponseEntity<>(dipendentes,HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add (@RequestBody Dipendente dipendente){
+    public ResponseEntity<?> add (@RequestBody Dipendente_Request_DTO dipendente__dto){
         try{
-            Dipendente new_dipendente = this.dipendenteService.add(dipendente);
-            return new ResponseEntity<>(new_dipendente,HttpStatus.CREATED);
+            Dipendente dipendente = this.dipendenteService.add(dipendente__dto);
+            return new ResponseEntity<>(dipendente,HttpStatus.CREATED);
         }
         catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/getallbynegozio")
-    public ResponseEntity<List<Dipendente>> getAllByNegozio (@RequestBody Negozio negozio) {
-        List<Dipendente> dipendentes = this.dipendenteService.getAll(negozio);
+    @GetMapping("/getallbynegozioid")
+    public ResponseEntity<List<Dipendente_Response_DTO>> getAllByNegozioId (@RequestParam Long id) {
+        List<Dipendente_Response_DTO> dipendentes = this.dipendenteService.findAllByNegozioId(id);
         return new ResponseEntity<>(dipendentes, HttpStatus.OK);
     }
-
+/*
     @PutMapping("/update")
     public ResponseEntity<?> update (@RequestBody Dipendente dipendente, @RequestBody Negozio negozio){
         try {
@@ -74,5 +70,5 @@ public class DipendenteController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+*/
 }
