@@ -1,6 +1,7 @@
 package supermarket.app.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import supermarket.app.enums.MansioneEnum;
 
@@ -13,10 +14,12 @@ public class Dipendente {
 
     @Column
     @Length(min = 2 , max = 20)
+    @NotNull
     private String nome;
 
     @Column
     @Length(min = 2 , max = 20)
+    @NotNull
     private String cognome;
 
     @Column
@@ -24,9 +27,11 @@ public class Dipendente {
     private MansioneEnum mansioneEnum;
 
     @Column
+    @NotNull
     private double stipendio;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "negozio_id")
     private Negozio negozio;
 

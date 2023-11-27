@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import supermarket.app.converters.DipendenteDTOConverter;
 import supermarket.app.dto.DipendenteDTORequest;
 import supermarket.app.dto.DipendenteDTOResponse;
+import supermarket.app.exceptions.ApiRequestException;
 import supermarket.app.models.Dipendente;
 import supermarket.app.models.Negozio;
 import supermarket.app.repositories.DipendenteRepo;
@@ -28,7 +29,7 @@ public class DipendenteService {
     //SELEZIONARE UN DIPENDENTE IN BASE ALL'ID
     public DipendenteDTORequest getByID (Long id){
         Dipendente dipendente = dipendenteRepo.findById(id)
-                .orElseThrow(()-> new NullPointerException("ID fornito non valido"));
+                .orElseThrow(()-> new ApiRequestException("ID fornito non valido"));
         DipendenteDTORequest dipendenteRequestDTO = dipendenteDTOConverter
                 .convertDipendenteToDipendenteDTORequest(dipendente);
         return dipendenteRequestDTO;
@@ -54,7 +55,7 @@ public class DipendenteService {
     public DipendenteDTOResponse add (DipendenteDTORequest dipendente__dto){
 
         Negozio negozio = negozioRepo.findById(dipendente__dto.getNegozio_id())
-                .orElseThrow(()->new NullPointerException("Id negozio non trovato"));
+                .orElseThrow(()->new ApiRequestException("Id negozio non trovato"));
 
         Dipendente dipendente = new Dipendente();
         dipendente.setNome(dipendente__dto.getNome());
@@ -87,10 +88,10 @@ public class DipendenteService {
     //MODIFICARE I DATI DI UN DIPENDENTE
     public DipendenteDTOResponse update (DipendenteDTOResponse dipendente){
         Dipendente new_Dipendente = dipendenteRepo.findById(dipendente.getId())
-                .orElseThrow(() -> new NullPointerException("Dipendente non trovato"));
+                .orElseThrow(() -> new ApiRequestException("Dipendente non trovato"));
 
         Negozio negozio = negozioRepo.findById(dipendente.getNegozio_id())
-                .orElseThrow(()->new NullPointerException("Id negozio non trovato"));
+                .orElseThrow(()->new ApiRequestException("Id negozio non trovato"));
 
         new_Dipendente.setNegozio(negozio);
         new_Dipendente.setNome(dipendente.getNome());
@@ -105,7 +106,7 @@ public class DipendenteService {
     //CANCELLARE DIPENDENTE TRAMITE ID
     public void remove (Long id){
         Dipendente new_Dipendente = dipendenteRepo.findById(id)
-                .orElseThrow(() -> new NullPointerException("Dipendente non trovato"));
+                .orElseThrow(() -> new ApiRequestException("Dipendente non trovato"));
         dipendenteRepo.deleteById(new_Dipendente.getId());
     }
 

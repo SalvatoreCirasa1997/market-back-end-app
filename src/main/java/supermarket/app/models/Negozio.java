@@ -1,7 +1,9 @@
 package supermarket.app.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+import org.modelmapper.internal.bytebuddy.implementation.bind.MethodDelegationBinder;
 
 @Entity
 @Table(name = "negozi")
@@ -12,14 +14,17 @@ public class Negozio {
 
     @Column
     @Length(min = 2, max = 20)
+    @NotNull
     private String citta;
 
     @Column
     @Length(min = 2, max = 40)
+    @NotNull
     private String indirizzo;
 
-    @Column
+    @Column(unique = true)
     @Length(min = 2, max = 50)
+    @NotNull
     private String pIva;
 
     public Negozio() {
