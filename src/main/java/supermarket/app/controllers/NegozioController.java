@@ -1,5 +1,6 @@
 package supermarket.app.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class NegozioController {
 
     //AGGIUNGERE UN NEGOZIO
     @PostMapping("/add")
-    public ResponseEntity<?> add (@RequestBody Negozio negozio){
+    public ResponseEntity<?> add (@Valid @RequestBody Negozio negozio){
         try {
             Negozio new_negozio = this.negozioService.add(negozio);
             return new ResponseEntity<>(negozio, HttpStatus.CREATED);
@@ -63,7 +64,7 @@ public class NegozioController {
 
     //MODIFICARE UN NEGOZIO
     @PutMapping("/update")
-    public ResponseEntity<?> update (@RequestBody Negozio negozio){
+    public ResponseEntity<?> update (@Valid @RequestBody Negozio negozio){
         try {
             Negozio new_negozio = this.negozioService.getById(negozio.getId());
             new_negozio.setpIva(negozio.getpIva());

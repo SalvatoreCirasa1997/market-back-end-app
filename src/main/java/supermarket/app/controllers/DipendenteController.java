@@ -1,5 +1,6 @@
 package supermarket.app.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,7 @@ public class DipendenteController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add (@RequestBody DipendenteDTORequest dipendente__dto){
+    public ResponseEntity<?> add (@Valid @RequestBody DipendenteDTORequest dipendente__dto){
         try{
             DipendenteDTOResponse dipendente = this.dipendenteService.add(dipendente__dto);
             return new ResponseEntity<>(dipendente,HttpStatus.CREATED);
@@ -49,7 +50,7 @@ public class DipendenteController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> update (@RequestBody DipendenteDTOResponse dipendente){
+    public ResponseEntity<?> update (@Valid @RequestBody DipendenteDTOResponse dipendente){
         try {
             DipendenteDTOResponse updated_dipendente = this.dipendenteService.update(dipendente);
             return new ResponseEntity<>(updated_dipendente, HttpStatus.ACCEPTED);

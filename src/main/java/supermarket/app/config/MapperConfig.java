@@ -1,4 +1,4 @@
-package supermarket.app.utils;
+package supermarket.app.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
