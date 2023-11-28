@@ -38,21 +38,17 @@ public class Utente implements UserDetails {
     @Enumerated(EnumType.STRING) //enum
     private RoleEnum role;
 
-    @ManyToOne
-    @JoinColumn(name = "negozio_id")
-    private Negozio negozio;
 
     public Utente() {
     }
 
-    public Utente(Long id, String username, String password, String name, String cognome, RoleEnum role, Negozio negozio) {
+    public Utente(Long id, String username, String password, String name, String cognome, RoleEnum role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
         this.cognome = cognome;
         this.role = role;
-        this.negozio = negozio;
     }
 
     @Override
@@ -131,11 +127,4 @@ public class Utente implements UserDetails {
         this.cognome = cognome;
     }
 
-    public Negozio getNegozio() {
-        return negozio;
-    }
-
-    public void setNegozio(Negozio negozio) {
-        this.negozio = negozio;
-    }
 }
